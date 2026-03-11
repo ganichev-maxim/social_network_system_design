@@ -1,0 +1,474 @@
+openapi: 3.1.0
+info:
+  title: Swagger Travelers social network
+  description: Социальную сеть для путешественников
+  contact:
+    email: test@test.test
+  version: 1.0.0
+paths:
+  /posts:
+    put:
+      tags:
+        - posts
+      summary: Создать пост.
+      description: Создать пост.
+      operationId: createPost
+      requestBody:
+        description: Содержание поста
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    examples: ['550e8400-e29b-41d4-a716-446655440000']
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    get:
+      tags:
+        - posts
+      summary: Лента постов
+      description: Лента постов
+      operationId: listPosts
+      parameters:
+        - name: page
+          in: query
+          description: Страница
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: place
+          in: query
+          description: место
+          required: false
+          schema:
+            type: string
+            examples: ['550e8400-e29b-41d4-a716-446655440000']
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+                  meta:
+                    type: object
+                    properties:
+                      hasNext:
+                        type: boolean
+                        examples: [true]
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /posts/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - posts
+      summary: Отредактировать пост.
+      description: Отредактировать пост.
+      operationId: updatePost
+      requestBody:
+        description: Содержание поста
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+        required: true
+      responses:
+        '204':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: integer
+                format: int64
+        '404':
+          description: Not Found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - posts
+      summary: Удалить пост.
+      description: Удалить пост.
+      operationId: deletePost
+      responses:
+        '204':
+          description: Successful operation
+        '404':
+          description: Not Found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /rates:
+    put:
+      tags:
+        - rates
+      summary: Оценить пост.
+      description: Оценить пост.
+      operationId: createRate
+      requestBody:
+        description: Оценка поста
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rate'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    examples: ['550e8400-e29b-41d4-a716-446655440000']
+        '404':
+          description: Not Found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /rates/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - rates
+      summary: Отредактировать оценку.
+      description: Отредактировать оценку.
+      operationId: updateRate
+      requestBody:
+        description: Оценка поста
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rate'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Not Found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - rates
+      summary: Удалить оценку.
+      description: Удалить оценку.
+      operationId: deleteRate
+      responses:
+        '204':
+          description: Successful operation
+        '404':
+          description: Not Found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /comments:
+    put:
+      tags:
+        - comments
+      summary: Создать комментарий.
+      description: Создать комментарий.
+      operationId: createComment
+      requestBody:
+        description: Создать комментарий
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    examples: ['550e8400-e29b-41d4-a716-446655440000']
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /comments/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - comments
+      summary: Отредактировать комментарий.
+      description: Отредактировать комментарий.
+      operationId: updateComment
+      requestBody:
+        description: Отредактировать комментарий
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Comment'
+        required: true
+      responses:
+        '204':
+          description: Successful operation
+        '404':
+          description: Not Found
+        '422':
+          description: Validation exception
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    delete:
+      tags:
+        - comments
+      summary: Удалить комментарий.
+      description: Удалить комментарий.
+      operationId: deleteComment
+      responses:
+        '200':
+          description: Successful operation
+        '404':
+          description: Not Found
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /users/{id}/subscribe:
+    post:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - users
+      summary: Подписаться на пользователя
+      description: Подписаться на пользователя
+      operationId: subscribeUser
+      responses:
+        '200':
+          description: Successful operation
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /user/posts:
+    get:
+      tags:
+        - user
+      summary: Посты пользователя
+      description: Подписаться на пользователя
+      operationId: userPosts
+      parameters:
+        - name: page
+          in: query
+          description: The page number to retrieve.
+          required: false
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+                  meta:
+                    type: object
+                    properties:
+                      hasNext:
+                        type: boolean
+                        examples: [true]
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /places/top:
+    get:
+      tags:
+        - places
+      summary: Популярные места
+      description: Популярные места
+      operationId: topPlaces
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  places:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Place'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        date:
+          type: string
+          format: date-time
+        photos:
+          type: array
+          items:
+            type: string
+            format: byte
+        placeId:
+          type: string
+        userId:
+          type: string
+        text:
+          type: string
+      required: [ id, photos, placeId, userId ]
+    Rate:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        rate:
+          type: number
+          minimum: 1
+          maximum: 5
+        userId:
+          type: string
+        postId:
+          type: string
+      required: [ id, rate, postId, userId ]
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        date:
+          type: string
+          format: date-time
+        userId:
+          type: string
+        text:
+          type: string
+          minLength: 2
+        postId:
+          type: string
+      required: [ id, userId, text, postId ]
+    Place:
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+        photo:
+          type: string
+          format: byte
+      required: [ id, name ]
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
