@@ -1,0 +1,46 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(user, "Путешественник", "Пользователь системы")
+
+System_Boundary(travel_system, "Travel System") {
+
+    Container(app, "Web / Mobile App", "", "Интерфейс для работы с контентом")
+
+    Container(gateway, "API Gateway", "Nginx", "Единая точка входа, проверка JWT, роутинг")
+
+    ' Сервисы
+    Container(auth_service, "Auth Service", "", "Управление пользователями и сессиями")
+    Container(post_service, "Post Service", "", "Логика постов, лента (Feed) и проверка медиа")
+    Container(media_service, "Media Service", "", "Загрузка и хранение метаданных фото")
+    Container(reaction_service, "Reaction Service", "", "Лайки и реакции к постам")
+
+    ' Хранилища
+    ContainerDb(db_users, "Users DB", "", "Данные профилей")
+    ContainerDb(db_posts, "Posts & Feed DB", "", "Контент постов и лента")
+    ContainerDb(db_reactions, "Reactions DB", "", "Счетчики лайков")
+    ContainerDb(s3_storage, "S3 Storage", "AWS S3 / Minio", "Хранилище фотографий")
+}
+
+' Основные связи через Gateway
+Rel(user, app, "Использует")
+Rel(app, gateway, "API запросы", "HTTPS")
+
+Rel(gateway, auth_service, "Валидация токена", "gRPC/HTTP")
+Rel(gateway, post_service, "Создать пост / Получить ленту", "HTTP")
+Rel(gateway, media_service, "Загрузить фото", "HTTP")
+Rel(gateway, reaction_service, "Поставить лайк", "HTTP")
+
+' Внутренняя синхронная логика
+Rel(post_service, media_service, "Проверка существования фото", "REST/gRPC")
+Rel(post_service, reaction_service, "Получение счетчиков лайков для ленты", "REST/gRPC")
+
+' Связи с БД
+Rel(auth_service, db_users, "Чтение/Запись")
+Rel(post_service, db_posts, "Чтение/Запись")
+Rel(reaction_service, db_reactions, "Инкремент/Дескримент")
+Rel(media_service, s3_storage, "Сохранение файлов")
+
+@enduml

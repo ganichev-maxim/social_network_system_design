@@ -1,0 +1,15 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+' uncomment the following line and comment the first to use locally
+' !include C4_Context.puml
+
+title Социальная сеть для путешественников
+
+Person_Ext(customer, "Пользователь", "Пользователь социальной сети для путешественников", person)
+Boundary(c0, "") {
+    System(socialNetwork, "Social Network System", "Позволяет пользователям делиться фото о своих путешествиях и просматривать посты других пользователей")
+}
+
+Rel(customer, socialNetwork, "Использует")
+
+@enduml
